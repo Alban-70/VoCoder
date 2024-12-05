@@ -24,10 +24,10 @@ public class Pauvocoder {
 
         // Open input .wev file
         double[] inputWav = StdAudio.read(wavInFile);
+        StdAudio.save(outPutFile+"linformatique.wav", resample(inputWav, freqScale));
 
         // Resample test
         double[] newPitchWav = resample(inputWav, freqScale);
-        StdAudio.save(outPutFile+"Resampled.wav", newPitchWav);
 
         // Simple dilatation
         double[] outputWav   = vocodeSimple(newPitchWav, 1.0/freqScale);
@@ -59,7 +59,31 @@ public class Pauvocoder {
      * @return resampled wav
      */
     public static double[] resample(double[] inputWav, double freqScale) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        // Si freqScale est égal à 0, alors on affiche le code d'erreur.
+        if (freqScale <= 0) {
+            throw new IllegalArgumentException("freqScale ne peut pas être négatif et égal à 0");
+        }
+
+        // Si freqScale est égal 1, alors pas de changement et on renvoie le tableau entré en paramètre.
+        if (freqScale==1){
+            return inputWav;
+        }
+        // Pour obtenir la taille du nouveau tableau, il faut diviser la taille du tableau entré en paramètre par freqScale.
+
+        int tailleNewWav = (int) (inputWav.length / freqScale);
+        double[] newWav = new double[tailleNewWav];
+
+        if(freqScale==1){
+            return inputWav;
+        }
+        if(freqScale>1 || freqScale<1){
+            int indiceInit;
+            for(int newIndice=0; newIndice<tailleNewWav; newIndice++){
+                indiceInit = (int)(newIndice*freqScale);
+                newWav[newIndice]=inputWav[indiceInit];
+            }
+        }
+        return newWav;
 
     }
 
