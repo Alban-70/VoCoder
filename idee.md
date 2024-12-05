@@ -1,12 +1,20 @@
 # Pour vocodeSimple()
 
 
-# La longueur du nouveau tableau est égal à la longueur du premier divisé par la fréquance
-        Si la fréquence est < 1 : 
-            taille += 1
-        Sinon : 
-            on ne change pas la taille
+# La longueur du nouveau tableau est égal à la longueur du premier multiplié par la fréquence
 
+## Il y a 3 cas:
+    si f == 1:
+       f < 1:
+       f > 1:
+
+### Faire boucle allant de i = 0 à nouvelle taille du tableau quand freqScale est plus grand que 1 
+    calculer l'indice de l'ancien tableau à partir de l'indice du nouveau tableau
+    oldIndice = int(newIndice / frequence)
+    newWave[i] = oldWave[oldindice]
+    
+
+# Voir schéma (Version minimale - idée générale sur : http://info.iut-bm.univ-fcomte.fr/staff/perrot/DUT-INFO/S1/SAE/2024/audio.html)
 
 
 ## Exemples :
@@ -24,5 +32,3 @@
         ***/***/***/
 
 
-
-si f = 0.2 (1 chance sur 5) alors choisir le début et la fin, et 

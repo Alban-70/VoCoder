@@ -25,7 +25,6 @@ public class Pauvocoder {
         // Open input .wev file
         double[] inputWav = StdAudio.read(wavInFile);
 
-
         // Resample test
         double[] newPitchWav = resample(inputWav, freqScale);
         StdAudio.save(outPutFile+"Resampled.wav", newPitchWav);
