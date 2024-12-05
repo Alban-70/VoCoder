@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/VoCoder.iml" filepath="$PROJECT_DIR$/.idea/VoCoder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/linformatique/linformatique.iml" filepath="$PROJECT_DIR$/linformatique/linformatique.iml" />
     </modules>
   </component>
 </project>
