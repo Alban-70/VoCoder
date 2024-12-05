@@ -25,6 +25,7 @@ public class Pauvocoder {
         // Open input .wev file
         double[] inputWav = StdAudio.read(wavInFile);
 
+
         // Resample test
         double[] newPitchWav = resample(inputWav, freqScale);
         StdAudio.save(outPutFile+"Resampled.wav", newPitchWav);
@@ -60,6 +61,7 @@ public class Pauvocoder {
      */
     public static double[] resample(double[] inputWav, double freqScale) {
         throw new UnsupportedOperationException("Not implemented yet");
+
     }
 
     /**
