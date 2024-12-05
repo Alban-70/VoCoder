@@ -60,15 +60,6 @@ public class Pauvocoder {
      */
     public static double[] resample(double[] inputWav, double freqScale) {
         throw new UnsupportedOperationException("Not implemented yet");
-        if (freqScale > 1){
-
-        }
-        if (freqScale < 1){
-
-        }
-        else{
-
-        }
     }
 
     /**
