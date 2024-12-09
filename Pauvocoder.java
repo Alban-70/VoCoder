@@ -61,7 +61,7 @@ public class Pauvocoder {
     public static double[] resample(double[] inputWav, double freqScale) {
         // Si freqScale est égal à 0, alors on affiche le code d'erreur.
         if (freqScale <= 0) {
-            throw new IllegalArgumentException("freqScale ne peut pas être négatif et égal à 0");
+            throw new IllegalArgumentException("freqScale ne peut pas être négatif ou égal à 0");
         }
 
         // Si freqScale est égal 1, alors pas de changement et on renvoie le tableau entré en paramètre.
