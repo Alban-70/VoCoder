@@ -96,16 +96,34 @@ public class Pauvocoder {
      * @return dilated wav
      */
     public static double[] vocodeSimple(double[] inputWav, double dilatation) {
+        dilatation = 1 /dilatation;
         int newlength = (int)(inputWav.length * dilatation);
         double[] newinputWav = new double[newlength];
         if (dilatation <= 0)
-            throw new UnsupportedOperationException("dilatation can't be negative or equal to 0");
+            throw new UnsupportedOperationException("Expansion can't be negative or equal to 0");
         if (dilatation > 1 ){
+            System.out.println("dilatation plus grand que 1 " + dilatation + " longueur " +  inputWav.length + " length " + newlength);
+            int count;
+            for(int i = 0; i < newlength; i++){
+                count = (int)(i * dilatation);
+                newinputWav[i] = inputWav[count];
+            }
+        }
+        else if (dilatation < 1 ){
+            System.out.println("dilatation plus petit que 1 " + dilatation + " longueur " +  inputWav.length + " length " + newlength);
+            int count;
+            for(int i = 0; i < newlength; i++){
+                count = (int)(i * dilatation);
+                newinputWav[i] = inputWav[count];
+            }
 
         }
-        if (dilatation < 1 ){
-
+        else{
+            System.out.println("dans le else, " + dilatation + " longueur " +  inputWav.length + " length " + newlength);
+            return inputWav;
         }
+
+
         return newinputWav;
     }
 
