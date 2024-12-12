@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 import static java.lang.System.exit;
 
 public class Pauvocoder {
@@ -59,16 +61,16 @@ public class Pauvocoder {
      * @return resampled wav
      */
     public static double[] resample(double[] inputWav, double freqScale) {
-        // Si freqScale est égal à 0, alors on affiche le code d'erreur.
+        // If freqscale is equal to 0, we show the error's code.
         if (freqScale <= 0) {
             throw new IllegalArgumentException("freqScale can't be negative or equal to 0");
         }
 
-        // Si freqScale est égal 1, alors pas de changement et on renvoie le tableau entré en paramètre.
+        // If freqscale is equal to 1, no change and we return the table in parameter.
         if (freqScale==1){
             return inputWav;
         }
-        // Pour obtenir la taille du nouveau tableau, il faut diviser la taille du tableau entré en paramètre par freqScale.
+        // For get the length of new table, it have devide the length of the table in parameter with freqscale.
 
         int tailleNewWav = (int) (inputWav.length / freqScale);
         double[] newWav = new double[tailleNewWav];
@@ -94,7 +96,8 @@ public class Pauvocoder {
      * @return dilated wav
      */
     public static double[] vocodeSimple(double[] inputWav, double dilatation) {
-        double[] newinputWav = new double[inputWav.length];
+        int newlength = (int)(inputWav.length * dilatation);
+        double[] newinputWav = new double[newlength];
         if (dilatation <= 0)
             throw new UnsupportedOperationException("dilatation can't be negative or equal to 0");
         if (dilatation > 1 ){
@@ -138,11 +141,21 @@ public class Pauvocoder {
      * Add an echo to the wav
      * @param wav
      * @param delay in msec
-     * @param gain
+     * @param attn
      * @return wav with echo
      */
-    public static double[] echo(double[] wav, double delay, double gain) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public static double[] echo(double[] wav, double delay, double attn) {
+        int delaySamples = (int)(delay * StdAudio.SAMPLE_RATE / 1000) ;
+
+        double[] sampleOutput = Arrays.copyOf(wav, wav.length) ;
+
+        for (int i = delaySamples; i < wav.length; i++) {
+            sampleOutput[i] += attn * wav[i - delaySamples];
+
+            sampleOutput[i] = Math.max(-1.0, Math.min(1.0, sampleOutput[i]));
+        }
+
+        return sampleOutput;
     }
 
     /**
