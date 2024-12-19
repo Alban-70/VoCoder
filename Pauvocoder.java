@@ -36,14 +36,14 @@ public class Pauvocoder {
         StdAudio.save(outPutFile+"Simple.wav", outputWav);
 
         // Simple dilatation with overlaping
-//        outputWav = vocodeSimpleOver(newPitchWav, 1.0/freqScale);
-//        StdAudio.save(outPutFile+"SimpleOver.wav", outputWav);
-//
-//        // Simple dilatation with overlaping and maximum cross correlation search
-//        outputWav = vocodeSimpleOverCross(newPitchWav, 1.0/freqScale);
-//        StdAudio.save(outPutFile+"SimpleOverCross.wav", outputWav);
-//
-//        joue(outputWav);
+        outputWav = vocodeSimpleOver(newPitchWav, 1.0/freqScale);
+        StdAudio.save(outPutFile+"SimpleOver.wav", outputWav);
+
+        // Simple dilatation with overlaping and maximum cross correlation search
+        outputWav = vocodeSimpleOverCross(newPitchWav, 1.0/freqScale);
+        StdAudio.save(outPutFile+"SimpleOverCross.wav", outputWav);
+
+        joue(outputWav);
 
         // Some echo above all
         outputWav = echo(outputWav, 100, 0.7);
