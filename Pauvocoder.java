@@ -96,37 +96,48 @@ public class Pauvocoder {
      * @return dilated wav
      */
     public static double[] vocodeSimple(double[] inputWav, double dilatation) {
+        int count = 0;
 
         dilatation = 1 / dilatation;
-        int newdilatation = (int)(dilatation * 10);
+
         int newlength = (int)(inputWav.length * dilatation);
+
         double[] newinputWav = new double[newlength];
+
+        int[] pass = new int[newlength/OVERLAP];
+
+        int passi = 1 ;
+
         if (dilatation <= 0)
-            throw new UnsupportedOperationException("Expansion can't be negative or equal to 0");
+            throw new UnsupportedOperationException("Dilatation can't be negative or equal to 0");
         if (dilatation > 1 ){
-            System.out.println("dilatation plus grand que 1 " + dilatation + " longueur " +  inputWav.length + " length " + newlength);
-            int count;
-            for(int i = 0; i < newlength; i++){
-                count = (int)(i * dilatation);
-                newinputWav[i] = inputWav[count];
+
+            for(int i = 1; i < inputWav.length; i++){
+                newinputWav[count] = inputWav[i];
+                count++ ;
+
+                if (i % OVERLAP == 0 && i != pass[passi-1]){
+                    pass[passi] = i ;
+                    passi++ ;
+                    System.out.println("" + i + " / " +  passi);
+                    i -= OVERLAP - SEEK_WINDOW;
+                    }
+
             }
         }
         else if (dilatation < 1 ){
-            System.out.println("dilatation plus petit que 1 : " + dilatation + ", longueur : " +  inputWav.length + " length : " + newlength + " newdilatation : " + newdilatation);
-            int count;
+
             for(int i = 0; i < inputWav.length; i++){
-                if (i % newdilatation == 0){
-                    i+= newdilatation;
-
-
+                newinputWav[count] = inputWav[i];
+                count++ ;
+                if (i % SEEK_WINDOW == 0){
+                i += OVERLAP - SEEK_WINDOW ;
                 }
-                count = (int)(i * dilatation);
-                newinputWav[count] = inputWav[count];
+
             }
 
         }
         else{
-            System.out.println("dans le else, " + dilatation + " longueur " +  inputWav.length + " length " + newlength);
             return inputWav;
         }
 
@@ -188,7 +199,16 @@ public class Pauvocoder {
      * @param wav
      */
     public static void displayWaveform(double[] wav) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setScale(-1, 1);
+        double intervalle = (2.0 / (wav.length/4.0)) ;
+        double position = -1 ;
+        for (int i = 0 ; i < wav.length ; i+=4) {
+            StdDraw.line(position, (-1*wav[i]/2.0), position, (wav[i]/2.0));
+            position += intervalle;
+        }
+        StdDraw.show();
     }
 
 
