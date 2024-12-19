@@ -36,14 +36,14 @@ public class Pauvocoder {
         StdAudio.save(outPutFile+"Simple.wav", outputWav);
 
         // Simple dilatation with overlaping
-        outputWav = vocodeSimpleOver(newPitchWav, 1.0/freqScale);
-        StdAudio.save(outPutFile+"SimpleOver.wav", outputWav);
-
-        // Simple dilatation with overlaping and maximum cross correlation search
-        outputWav = vocodeSimpleOverCross(newPitchWav, 1.0/freqScale);
-        StdAudio.save(outPutFile+"SimpleOverCross.wav", outputWav);
-
-        joue(outputWav);
+//        outputWav = vocodeSimpleOver(newPitchWav, 1.0/freqScale);
+//        StdAudio.save(outPutFile+"SimpleOver.wav", outputWav);
+//
+//        // Simple dilatation with overlaping and maximum cross correlation search
+//        outputWav = vocodeSimpleOverCross(newPitchWav, 1.0/freqScale);
+//        StdAudio.save(outPutFile+"SimpleOverCross.wav", outputWav);
+//
+//        joue(outputWav);
 
         // Some echo above all
         outputWav = echo(outputWav, 100, 0.7);
@@ -119,10 +119,8 @@ public class Pauvocoder {
                 if (i % OVERLAP == 0 && i != pass[passi-1]){
                     pass[passi] = i ;
                     passi++ ;
-                    System.out.println("" + i + " / " +  passi);
                     i -= OVERLAP - SEEK_WINDOW;
                     }
-
             }
         }
         else if (dilatation < 1 ){
@@ -133,15 +131,11 @@ public class Pauvocoder {
                 if (i % SEEK_WINDOW == 0){
                 i += OVERLAP - SEEK_WINDOW ;
                 }
-
             }
-
         }
         else{
             return inputWav;
         }
-
-
         return newinputWav;
     }
 
@@ -181,14 +175,29 @@ public class Pauvocoder {
      * @return wav with echo
      */
     public static double[] echo(double[] wav, double delay, double attn) {
-        int delaySamples = (int)(delay * StdAudio.SAMPLE_RATE / 1000) ;
+        if (attn < 0 || attn > 1)
+            throw new UnsupportedOperationException("Attn must be between 0 and 1");
+        if (delay < 0)
+            throw new UnsupportedOperationException("Delay must be non-negative");
 
-        double[] sampleOutput = Arrays.copyOf(wav, wav.length) ;
+        //Calculate the number of samples that delay represents
+        int delaySamples = (int)(delay * StdAudio.SAMPLE_RATE / 1000);
 
-        for (int i = delaySamples; i < wav.length; i++) {
-            sampleOutput[i] += attn * wav[i - delaySamples];
+        double[] sampleOutput = new double[wav.length + delaySamples];
 
-            sampleOutput[i] = Math.max(-1.0, Math.min(1.0, sampleOutput[i]));
+        // Add the sample with delay and attn
+        for (int i = 0; i < wav.length; i++) {
+            sampleOutput[i + delaySamples] = attn * wav[i];
+        }
+
+        // Adds basic sound to echo
+        for (int i = 0; i < wav.length; i++) {
+            sampleOutput[i] += wav[i];
+
+            if (sampleOutput[i] > 1.0)
+                sampleOutput[i] = 1.0;
+            if (sampleOutput[i] < -1.0)
+                sampleOutput[i] = -1.0;
         }
 
         return sampleOutput;
