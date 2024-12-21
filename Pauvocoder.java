@@ -96,47 +96,27 @@ public class Pauvocoder {
      * @return dilated wav
      */
     public static double[] vocodeSimple(double[] inputWav, double dilatation) {
+
+        int newLength = (int) (inputWav.length / dilatation);
+        double[] outputWav = new double[newLength];
+        int jump = (int) (SEQUENCE * dilatation);
         int count = 0;
 
-        dilatation = 1 / dilatation;
-
-        int newlength = (int)(inputWav.length * dilatation);
-
-        double[] newinputWav = new double[newlength];
-
-        int[] pass = new int[newlength/OVERLAP];
-
-        int passi = 1 ;
-
-        if (dilatation <= 0)
-            throw new UnsupportedOperationException("Dilatation can't be negative or equal to 0");
-        if (dilatation > 1 ){
-
-            for(int i = 1; i < inputWav.length; i++){
-                newinputWav[count] = inputWav[i];
-                count++ ;
-
-                if (i % OVERLAP == 0 && i != pass[passi-1]){
-                    pass[passi] = i ;
-                    passi++ ;
-                    i -= OVERLAP - SEEK_WINDOW;
-                    }
-            }
-        }
-        else if (dilatation < 1 ){
-
-            for(int i = 0; i < inputWav.length; i++){
-                newinputWav[count] = inputWav[i];
-                count++ ;
-                if (i % SEEK_WINDOW == 0){
-                i += OVERLAP - SEEK_WINDOW ;
-                }
-            }
-        }
-        else{
+        if (dilatation == 1) {
             return inputWav;
         }
-        return newinputWav;
+
+        for (int i = 0; i < inputWav.length - jump; i += jump) {
+            for (int j = 0; j < SEQUENCE; j++) {
+                if (count < newLength && i + j < inputWav.length) {
+                    outputWav[count++] = inputWav[i + j];
+                }
+                System.out.println(j);
+            }
+
+        }
+
+        return outputWav;
     }
 
     /**
@@ -146,7 +126,54 @@ public class Pauvocoder {
      * @return dilated wav
      */
     public static double[] vocodeSimpleOver(double[] inputWav, double dilatation) {
-        throw new UnsupportedOperationException("Not implemented yet");
+
+        int count = 0;
+
+        int newSeq = SEQUENCE / 50;
+
+
+        dilatation = 1 / dilatation;
+
+        int newlength = (int)(inputWav.length * dilatation);
+
+        double[] newinputWav = new double[newlength];
+
+        int[] pass = new int[newlength];
+
+        int passi = 1 ;
+
+        double coeff_debut = 0;
+
+        double test = (double)1 / OVERLAP;
+
+//        for (int j = 0; j < inputWav.length; j++){
+//            newinputWav[j] = inputWav[j] * coeff_debut;
+//            coeff_debut += test;
+//            System.out.println(newinputWav[j]);
+//        }
+        if (dilatation > 1 ){
+            int jump = (int)(newSeq * dilatation);
+            for (int j = 0; j < inputWav.length; j++){
+                for(int i = 0; i < OVERLAP; i++){
+                    newinputWav[j] = coeff_debut;
+                    coeff_debut += test;
+                    j+= 3 * OVERLAP;
+                    System.out.println(coeff_debut);
+//                newinputWav[count] = inputWav[i];
+//                count++ ;
+
+//                    if (i % jump == 0 && i != pass[passi-1]){
+//                        pass[passi] = i ;
+//                        passi++ ;
+//                        i += newSeq - jump;
+//                    }
+                }
+            }
+
+        }
+
+
+        return newinputWav;
     }
 
     /**
